@@ -13,15 +13,23 @@ delete configuration.baseOptions.headers['User-Agent'];
 
 function DalleImage({ prompt }) {
   const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function getAiResponse() {
-    const openai = new OpenAIApi(configuration);
-    const completion = await openai.createImage({
-      prompt,
-      n: 1,
-      size: '256x256',
-    });
-    setImageUrl(completion.data.data[0].url);
+    try {
+      setLoading(true);
+      const openai = new OpenAIApi(configuration);
+      const completion = await openai.createImage({
+        prompt,
+        n: 1,
+        size: '256x256',
+      });
+
+      setLoading(false);
+      setImageUrl(completion.data.data[0].url);
+    } catch (e) {
+      setLoading(false);
+    }
   }
 
   const handleOnClick = () => {
@@ -30,9 +38,15 @@ function DalleImage({ prompt }) {
 
   return (
     <div className={styles.Container}>
-      <button type="button" onClick={handleOnClick}>
-        Get AI Response
-      </button>
+      {loading ? (
+        <button type="submit" className={styles.Button} disabled>
+          <div className={styles.Loader} />
+        </button>
+      ) : (
+        <button type="button" className={styles.Button} onClick={handleOnClick}>
+          Generate Image
+        </button>
+      )}
 
       {imageUrl
         ? <img src={imageUrl} alt={prompt} className={styles.Image} />
