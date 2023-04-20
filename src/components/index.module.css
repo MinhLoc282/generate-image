@@ -1,0 +1,14 @@
+.Container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 50px;
+}
+
+.Image {
+  height: 256px;
+  width: 256px;
+  margin-top: 30px;
+}
